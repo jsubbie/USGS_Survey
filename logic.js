@@ -14,8 +14,8 @@ d3.json(queryURL, function(data) {
 
 // markerSize function 
 
-function markerSize(magnitude) {
-  return magnitude * 5;
+function markerSize(mag) {
+  return mag * 5;
 }
 
 // function to return the color for each circle marker 
@@ -24,23 +24,23 @@ function markerSize(magnitude) {
 /// it includes exact values. So... if you need to do this in the future don't simply settle on > < becuase it doesn't include the 
 /// entire range of values. I was genuinely hoping for something simple here, but it didn't quite work. 
 
-function colors(magnitude){
-  if(magnitude>=0 & magnitude<=1){
+function colors(mag){
+  if(mag>=0 & mag<=1){
       return "#32fff4";
   }
-  else if(magnitude>1 & magnitude<=2){
+  else if(mag>1 & mag<=2){
       return "#3168ff";
   }
-  else if(magnitude>2 & magnitude<=3){
+  else if(mag>2 & mag<=3){
       return "#8330ff";
   }
-  else if(magnitude>3 & magnitude<=4){
+  else if(mag>3 & mag<=4){
       return "#ff30f8";
   }
-  else if(magnitude>4 & magnitude<=5){
+  else if(mag>4 & mag<=5){
       return "#ff9030";
   }
-  else if(magnitude>5){
+  else if(mag>5){
       return "#ff4b30";
   }
 }
@@ -76,16 +76,16 @@ function createFeatures(earthquakeData) {
 
 function createMap(earthquakes) {
 
-  var plain_map = L.tileLayer("https://api.mapbox.com/styles/v1/jmsubbie/cjfzwtqg00dnx2spozs4a96vd.html?fresh=true&title=true&access_token=pk.eyJ1Ijoiam1zdWJiaWUiLCJhIjoiY2pmenQ2bzJnMGh4dTJ3bzZmNGUxbHVsaiJ9.aWAOEsXP3I6NybftG5mZMA#12.0/48.866500/2.317600/0");
+  var plainmap = L.tileLayer("https://api.mapbox.com/styles/v1/jmsubbie/cjfzwtqg00dnx2spozs4a96vd.html?fresh=true&title=true&access_token=pk.eyJ1Ijoiam1zdWJiaWUiLCJhIjoiY2pmenQ2bzJnMGh4dTJ3bzZmNGUxbHVsaiJ9.aWAOEsXP3I6NybftG5mZMA#12.0/48.866500/2.317600/0");
 
-  var sat_map = L.tileLayer("https://api.mapbox.com/styles/v1/jmsubbie/cjfzu3grqentw2sqpq4ub64hr.html?fresh=true&title=true&access_token=pk.eyJ1Ijoiam1zdWJiaWUiLCJhIjoiY2pmenQ2bzJnMGh4dTJ3bzZmNGUxbHVsaiJ9.aWAOEsXP3I6NybftG5mZMA#12.4/33.745751/-118.404311/0");
+  var satellite = L.tileLayer("https://api.mapbox.com/styles/v1/jmsubbie/cjfzu3grqentw2sqpq4ub64hr.html?fresh=true&title=true&access_token=pk.eyJ1Ijoiam1zdWJiaWUiLCJhIjoiY2pmenQ2bzJnMGh4dTJ3bzZmNGUxbHVsaiJ9.aWAOEsXP3I6NybftG5mZMA#12.4/33.745751/-118.404311/0");
 
   var dark = L.tileLayer("https://api.mapbox.com/styles/v1/jmsubbie/cjej6ujev44yt2slcu5e0shyi.html?fresh=true&title=true&access_token=pk.eyJ1Ijoiam1zdWJiaWUiLCJhIjoiY2pmenQ2bzJnMGh4dTJ3bzZmNGUxbHVsaiJ9.aWAOEsXP3I6NybftG5mZMA#10.0/42.362400/-71.020000/0");
 
   // Define a baseMaps object to hold our base layers
   var baseMaps = {
-    "Basic Map": plain_map,
-    "Satellite Map": sat_map,
+    "Basic Map": plainmap,
+    "Satellite Map": satellite,
     "Dark Map": dark,};
 
   // fault lines layer 
@@ -103,13 +103,11 @@ function createMap(earthquakes) {
 
   // create map and have it load basic map and earthquake layers on launch
   var myMap = L.map("map", {
-    center: [
-      37.09, -95.71
-    ],
-    zoom: 5,
-    layers: [plain_map, earthquakes, faultLines, timeLineLayer]
+    center: [0, -3.9962],
+    zoom:2,
+    layers: [plainmap, earthquakes, faultLines, timeLineLayer],
+    maxBounds: [[90,-180], [-90, 180]]
   });
-
 
   // create layer controls // pass into baseMaps and overlayMaps // add legend to map using .addTo
   L.control.layers(baseMaps, overlayMaps, {
@@ -126,8 +124,8 @@ legend.onAdd = function (myMap) {
     // loop through our density intervals and generate a label with a colored square for each interval
     for (var i = 0; i < mag.length; i++) {
         div.innerHTML +=
-            '<i style="background:' + colors(magnitude[i] + 1) + '"></i> ' +
-            magnitude[i] + (magnitude[i + 1] ? '&ndash;' + magnitude[i + 1] + '<br>' : '+');
+            '<i style="background:' + colors(mag[i] + 1) + '"></i> ' +
+            mag[i] + (mag[i + 1] ? '&ndash;' + mag[i + 1] + '<br>' : '+');
     }
 
     return div;
