@@ -118,10 +118,11 @@ function createMap(earthquakes) {
 legend.onAdd = function (myMap) {
 
     var div = L.DomUtil.create('div', 'info legend'),
-        magnitude = [0,1,2,3,4,5]
+        mag = [0,1,2,3,4,5]
         labels = [];
 
-    // loop through our density intervals and generate a label with a colored square for each interval
+    // loop through our density intervals and generate a label with a colored square for each interval 
+    // boilerplate code 
     for (var i = 0; i < mag.length; i++) {
         div.innerHTML +=
             '<i style="background:' + colors(mag[i] + 1) + '"></i> ' +
